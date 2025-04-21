@@ -13,18 +13,18 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        final String securitySchemeName = "bearerAuth"; // Name of the security scheme
+        final String securitySchemeName = "bearerAuth";
         return new OpenAPI()
                 .info(new Info()
                         .title("License Management API")
-                        .description("API documentation for License Management with JWT authentication")
-                        .version("1.0"))
-                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName)) // Apply the security scheme globally
+                        .description("License Management with JWT authentication")
+                        .version("V1.0"))
+                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()
                         .addSecuritySchemes(securitySchemeName, new SecurityScheme()
                                 .name(securitySchemeName)
-                                .type(SecurityScheme.Type.HTTP) // HTTP authentication
-                                .scheme("bearer") // Bearer token type
-                                .bearerFormat("JWT"))); // Specify the token format
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")));
     }
 }

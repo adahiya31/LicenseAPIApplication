@@ -12,7 +12,4 @@ public class LicenseResponse {
 
     private boolean eligible;
 
-
-
-
 }

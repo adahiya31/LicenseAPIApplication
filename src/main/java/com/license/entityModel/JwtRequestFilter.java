@@ -41,11 +41,10 @@ public class JwtRequestFilter implements Filter {
         String userId = null;
         String jwt = null;
 
-        // Extract the JWT token from the Authorization header
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             try {
-                userId = String.valueOf(jwtUtil.extractClaims(jwt)); // Extract user ID or claims from the token
+                userId = String.valueOf(jwtUtil.extractClaims(jwt));
             } catch (ExpiredJwtException e) {
                 logger.warn("JWT token has expired: {}", e.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -70,8 +69,7 @@ public class JwtRequestFilter implements Filter {
 
 
 
-        // Validate the token and set the authentication context
-        if (userId != null && jwtUtil.isTokenValid(jwt)) {
+       if (userId != null && jwtUtil.isTokenValid(jwt)) {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userId, null, new ArrayList<>());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

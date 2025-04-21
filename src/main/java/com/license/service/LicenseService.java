@@ -25,9 +25,10 @@ public class LicenseService {
     @Autowired
     private LicenseRepository licenseRepository;
 
-    @Cacheable(value = "licensesEligibility", key = "#contentId", unless = "#result == false")
+    @Cacheable(value = "licensesEligibility", key = "#contentId")
     public boolean isUserEligibleForLicense(String userId, String contentId) {
-        if (userId == null || userId.trim().isEmpty() || contentId == null || contentId.trim().isEmpty()) {
+        if (userId == null || userId.trim().isEmpty()
+                || contentId == null || contentId.trim().isEmpty()) {
             throw new IllegalArgumentException("User ID and Content ID must be provided");
         }
 
@@ -37,12 +38,11 @@ public class LicenseService {
 
         if (licenseOpt.isPresent()) {
             LicenseRequest license = licenseOpt.get();
-            return license.getUserId().equals(userId) && license.getExpiryAt().isAfter(LocalDateTime.now());
+            return license.getUserId().equals(userId)
+                    && license.getExpiryAt().isAfter(LocalDateTime.now());
         }
-
         return false;
     }
-
 
 
     @Cacheable(value = "licenses", key = "#contentId")
@@ -51,25 +51,21 @@ public class LicenseService {
     }
 
     public LicenseRequest getLicense(String contentId) {
-        return licenseRepository.findByContentId(contentId)
-                .orElse(null);
+        return licenseRepository.findByContentId(contentId).orElse(null);
     }
 
     @CachePut(value = "licenses", key = "#license.contentId")
     @Transactional
     public LicenseRequest createLicense(String contentId, String userId) {
-        // Validate input
         if (contentId == null || contentId.trim().isEmpty() || userId == null || userId.trim().isEmpty()) {
             throw new IllegalArgumentException("Content ID and User ID must be provided");
         }
 
-        // Check if a license already exists
         Optional<LicenseRequest> existingLicense = licenseRepository.findByContentId(contentId);
         if (existingLicense.isPresent()) {
             throw new LicenseAlreadyExistsException("License already exists for contentId: " + contentId);
         }
 
-        // Create and save the new license
         LicenseRequest license = new LicenseRequest();
         license.setContentId(contentId);
         license.setUserId(userId);
@@ -84,27 +80,23 @@ public class LicenseService {
     @Transactional
     @CachePut(value = "licenses", key = "#license.contentId")
     public LicenseRequest updateLicense(LicenseRequest license) {
-        // Check if the license exists
         Optional<LicenseRequest> existingLicenseOpt = licenseRepository.findByContentId(license.getContentId());
         if (!existingLicenseOpt.isPresent()) {
             throw new IllegalArgumentException("License not found for contentId: " + license.getContentId());
         }
 
-        // Update and save the license
-        license.setCreatedAt(existingLicenseOpt.get().getCreatedAt());  // Retain the creation time
+        license.setCreatedAt(existingLicenseOpt.get().getCreatedAt());
         return licenseRepository.save(license);
     }
 
-   @Transactional
-   @CacheEvict(value = "licenses", key = "#contentId")
-   public void deleteLicense(String contentId) {
-        // Check if the license exists
+    @Transactional
+    @CacheEvict(value = "licenses", key = "#contentId")
+    public void deleteLicense(String contentId) {
         Optional<LicenseRequest> existingLicenseOpt = licenseRepository.findByContentId(contentId);
         if (!existingLicenseOpt.isPresent()) {
             throw new IllegalArgumentException("License not found for contentId: " + contentId);
         }
 
-        // Delete the license from the repository
         licenseRepository.deleteByContentId(contentId);
     }
 }
