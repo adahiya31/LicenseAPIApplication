@@ -1,0 +1,21 @@
+package com.license.exception;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ErrorResponse {
+    private String message;
+    private String details;
+    private LocalDateTime timestamp;
+    private String code;
+
+    public ErrorResponse(String anUnexpectedErrorOccurred, String message, String internalServerError) {
+    }
+    
+}
