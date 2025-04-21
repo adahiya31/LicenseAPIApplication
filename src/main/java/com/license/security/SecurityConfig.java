@@ -20,14 +20,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF protection
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/swagger-ui/**", // Allow Swagger UI
-                                "/v3/api-docs/**", // Allow OpenAPI docs
-                                "/generate-token" // Allow token generation
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/generate-token"
                         ).permitAll()
-                        .anyRequest().authenticated() // Secure all other endpoints
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -41,7 +41,7 @@ public class SecurityConfig {
     }
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Use BCrypt for secure password storage
+        return new BCryptPasswordEncoder();
     }
 
 

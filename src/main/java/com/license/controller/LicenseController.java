@@ -82,7 +82,7 @@ public class LicenseController {
 
     @Operation(summary = "Update an existing license", description = "Update an existing license")
     @ApiResponse(responseCode = "200", description = "License updated successfully")
-    @ApiResponse(responseCode = "400", description = "Bad Request if the input is invalid")
+    @ApiResponse(responseCode = "400", description = "Bad Request")
     @PutMapping("/license")
     public ResponseEntity<?> updateLicense(@Valid @RequestBody LicenseRequest licenseRequest) {
         LicenseRequest updatedLicense = licenseService.updateLicense(licenseRequest);

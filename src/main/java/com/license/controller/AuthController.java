@@ -13,8 +13,9 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @GetMapping("/generate-token")
+    @GetMapping("/auth")
     public String generateToken(@RequestParam String userId) {
+
         return jwtUtil.generateToken(userId);
     }
 }
