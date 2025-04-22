@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,10 @@ public class LicenseService {
         return false;
     }
 
+    private String getAuthenticatedUserId() {
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return (object instanceof String) ? (String) object : null;
+    }
 
     @Cacheable(value = "licenses", key = "#contentId")
     public List<LicenseRequest> getAllLicenses() {
@@ -57,7 +62,7 @@ public class LicenseService {
     @CachePut(value = "licenses", key = "#license.contentId")
     @Transactional
     public LicenseRequest createLicense(String contentId, String userId) {
-        if (contentId == null || contentId.trim().isEmpty() || userId == null || userId.trim().isEmpty()) {
+         if (contentId == null || contentId.trim().isEmpty() || userId == null || userId.trim().isEmpty()) {
             throw new IllegalArgumentException("Content ID and User ID must be provided");
         }
 
@@ -84,7 +89,6 @@ public class LicenseService {
         if (!existingLicenseOpt.isPresent()) {
             throw new IllegalArgumentException("License not found for contentId: " + license.getContentId());
         }
-
         license.setCreatedAt(existingLicenseOpt.get().getCreatedAt());
         return licenseRepository.save(license);
     }

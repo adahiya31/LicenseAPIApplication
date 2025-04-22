@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -44,7 +45,7 @@ public class LicenseController {
     @GetMapping("/license")
     public ResponseEntity<LicenseResponse> checkLicenseEligibility(@Valid @RequestParam String contentId) {
         String userId = getAuthenticatedUserId();
-        boolean isEligible = licenseService.isUserEligibleForLicense(userId, contentId);
+        boolean isEligible = licenseService.isUserEligibleForLicense(userId,contentId);
         return ResponseEntity.status(HttpStatus.OK).body(new LicenseResponse(isEligible));
     }
 
@@ -63,7 +64,7 @@ public class LicenseController {
             return ResponseEntity.ok(license);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ErrorResponse("License Not Found", "No license for contentId: " + contentId, "404")
+                    new ErrorResponse("License Not Found", "No license for contentId: " + contentId, LocalDateTime.now())
             );
         }
     }
@@ -96,6 +97,6 @@ public class LicenseController {
     public ResponseEntity<?> deleteLicense(@RequestParam String contentId) {
         licenseService.deleteLicense(contentId);
         return ResponseEntity.status(HttpStatus.OK).body(new ErrorResponse("Success",
-                "License deleted successfully", "200"));
+                "License deleted successfully", LocalDateTime.now()));
     }
 }
