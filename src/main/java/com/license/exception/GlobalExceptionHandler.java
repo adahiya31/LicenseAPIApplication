@@ -26,14 +26,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
-        Map<String, Object> error = new HashMap<>();
-        error.put("timestamp", LocalDateTime.now());
-        error.put("status", HttpStatus.BAD_REQUEST.value());
-        error.put("error", "Bad Request");
-        error.put("message", ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleIllegalArg(IllegalArgumentException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(),"Invalid parameters",LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    @ExceptionHandler(LicenseAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateLicense(LicenseAlreadyExistsException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(),"Conflict: A license with this contentId already exists",LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
 
@@ -62,8 +63,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
 
-        // Collect all validation errors
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
+        ex.getBindingResult().getAllErrors().forEach((error) ->
+        {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
