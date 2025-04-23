@@ -148,6 +148,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<finalName>LicenseApi-V3</finalName>
 				</configuration>
 			</plugin>
 		</plugins>
