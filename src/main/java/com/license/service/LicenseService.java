@@ -1,6 +1,10 @@
 package com.license.service;
 
 import com.license.DTOs.LicenseRequest;
+import com.license.entityModel.Permission;
+import com.license.entityModel.Role;
+import com.license.entityModel.Rule;
+import com.license.entityModel.User;
 import com.license.exception.LicenseAlreadyExistsException;
 import com.license.repository.*;
 import org.slf4j.Logger;
@@ -9,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +58,7 @@ public class LicenseService {
             throw new IllegalArgumentException("User ID and Content ID must be provided");
         }
 
-        //User user = userService.getUserById(Long.parseLong(userId));
+        User user = userService.getUserById(Long.parseLong(userId));
 
         Optional<LicenseRequest> licenseOpt = licenseRepository.findByContentId(contentId);
 
@@ -65,9 +70,42 @@ public class LicenseService {
                     && license.getExpiryAt().isAfter(LocalDateTime.now());
         }
 
+        List<String> requiredRoles = List.of("Admin", "Premium User");
+        boolean hasRequiredRole = user.getRoles().stream()
+                .map(Role::getName)
+                .anyMatch(requiredRoles::contains);
 
+        if (!hasRequiredRole) {
+            return false;
+        }
 
-        return true;
+        String requiredPermission = "LICENSE_ACCESS";
+        boolean hasRequiredPermission = user.getRoles().stream()
+                .flatMap(role -> role.getPermissions().stream())
+                .map(Permission::getName)
+                .anyMatch(permission -> permission.equals(requiredPermission));
+
+        if (!hasRequiredPermission) {
+            return false;
+        }
+
+        List<Rule> rules = ruleRepository.findByContentId(contentId);
+        for (Rule rule : rules) {
+            boolean matchesRole = user.getRoles().stream()
+                    .map(Role::getName)
+                    .anyMatch(role -> role.equals(rule.getRequiredRole()));
+
+            boolean matchesPermission = user.getRoles().stream()
+                    .flatMap(role -> role.getPermissions().stream())
+                    .map(Permission::getName)
+                    .anyMatch(permission -> permission.equals(rule.getRequiredPermission()));
+
+            if (!matchesRole || !matchesPermission) {
+                return false;
+            }
+        }
+
+        return false;
     }
 
     public List<LicenseRequest> getAllLicenses() {
