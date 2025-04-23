@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "licenses")
+@Table
 @Data
 public class LicenseRequest {
 

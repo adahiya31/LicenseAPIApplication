@@ -9,8 +9,8 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.license.api</groupId>
-	<artifactId>API</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>licenseapi</artifactId>
+	<version>1</version>
 	<name>API</name>
 	<description>license project for Spring Boot</description>
 	<url/>
@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.5.5</version>
+			<version>42.7.2</version>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
@@ -148,7 +148,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-					<finalName>LicenseApi-V3</finalName>
+					<finalName>licenseapi</finalName>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -50,7 +50,6 @@ public class LicenseService {
         return (object instanceof String) ? (String) object : null;
     }
 
-    @Cacheable(value = "licenses", key = "#contentId")
     public List<LicenseRequest> getAllLicenses() {
         return licenseRepository.findAll();
     }
@@ -59,7 +58,6 @@ public class LicenseService {
         return licenseRepository.findByContentId(contentId).orElse(null);
     }
 
-    @CachePut(value = "licenses", key = "#license.contentId")
     @Transactional
     public LicenseRequest createLicense(String contentId, String userId) {
          if (contentId == null || contentId.trim().isEmpty() || userId == null || userId.trim().isEmpty()) {
