@@ -49,10 +49,7 @@ public class LicenseController {
         return ResponseEntity.status(HttpStatus.OK).body(new LicenseResponse(isEligible));
     }
 
-    private String getAuthenticatedUserId() {
 
-        return "authenticatedUserId";
-    }
 
     @Operation(summary = "Get license details", description = "Retrieve license details by contentId")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved license details")
@@ -100,5 +97,9 @@ public class LicenseController {
                 "License deleted successfully", LocalDateTime.now()));
     }
 
+    private String getAuthenticatedUserId() {
+
+        return "authenticatedUserId";
+    }
 
 }
