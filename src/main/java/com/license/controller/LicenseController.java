@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +30,7 @@ public class LicenseController {
 
         this.licenseService = licenseService;
     }
+
     @Operation(summary = "Get all licenses", description = "Retrieve a list of all licenses")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved licenses")
     @GetMapping("/all/license")
@@ -45,7 +45,7 @@ public class LicenseController {
     @GetMapping("/license")
     public ResponseEntity<LicenseResponse> checkLicenseEligibility(@Valid @RequestParam String contentId) {
         String userId = getAuthenticatedUserId();
-        boolean isEligible = licenseService.isUserEligibleForLicense(userId,contentId);
+        boolean isEligible = licenseService.isUserEligibleForLicense(userId, contentId);
         return ResponseEntity.status(HttpStatus.OK).body(new LicenseResponse(isEligible));
     }
 
@@ -77,7 +77,7 @@ public class LicenseController {
     public ResponseEntity<?> createLicense(@Valid @RequestParam String contentId,
                                            @Valid @RequestParam String userId) {
         LicenseRequest license = licenseService.createLicense(contentId, userId);
-       return ResponseEntity.status(HttpStatus.CREATED).body(license);
+        return ResponseEntity.status(HttpStatus.CREATED).body(license);
 
     }
 
@@ -99,4 +99,6 @@ public class LicenseController {
         return ResponseEntity.status(HttpStatus.OK).body(new ErrorResponse("Success",
                 "License deleted successfully", LocalDateTime.now()));
     }
+
+
 }

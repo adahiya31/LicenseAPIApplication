@@ -2,8 +2,6 @@ package com.license.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -27,16 +25,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArg(IllegalArgumentException ex) {
-        ErrorResponse error = new ErrorResponse(ex.getMessage(),"Invalid parameters",LocalDateTime.now());
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), "Invalid parameters", LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(LicenseAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateLicense(LicenseAlreadyExistsException ex) {
-        ErrorResponse error = new ErrorResponse(ex.getMessage(),"Conflict: A license with this contentId already exists",LocalDateTime.now());
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), "Conflict: A license with this contentId already exists", LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
-
 
 
     @ExceptionHandler(InvalidTokenException.class)

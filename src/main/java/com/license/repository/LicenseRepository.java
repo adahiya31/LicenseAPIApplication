@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface LicenseRepository extends JpaRepository<LicenseRequest, Long> {
 
     Optional<LicenseRequest> findByContentId(String contentId);
+
     void deleteByContentId(String contentId);
 }

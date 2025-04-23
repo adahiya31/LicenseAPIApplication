@@ -10,9 +10,9 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class LicenseApplication {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		SpringApplication.run(LicenseApplication.class, args);
-	}
+        SpringApplication.run(LicenseApplication.class, args);
+    }
 
 }
