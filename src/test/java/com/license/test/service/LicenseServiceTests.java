@@ -115,7 +115,7 @@ public class LicenseServiceTests {
     @Test
     void testIsUserEligibleForLicense_Expired() {
         String contentId = "content123";
-        String userId = "123L";
+        String userId = "123";
 
         LicenseRequest license = new LicenseRequest();
         license.setContentId(contentId);

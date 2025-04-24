@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(LicenseAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateLicense(LicenseAlreadyExistsException ex) {
-        ErrorResponse error = new ErrorResponse(ex.getMessage(), "Conflict: A license with this contentId already exists", LocalDateTime.now());
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), "A license with this contentId already exists", LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 

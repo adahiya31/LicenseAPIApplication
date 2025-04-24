@@ -19,8 +19,7 @@ import java.util.List;
 
 @RestController
 @Validated
-@Tag(name = "License API", description = "APIs to manage licenses")
-
+@Tag(name = "License API", description = "APIs to manage license")
 public class LicenseController {
 
     private final LicenseService licenseService;

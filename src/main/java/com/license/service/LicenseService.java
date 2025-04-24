@@ -105,7 +105,7 @@ public class LicenseService {
             }
         }
 
-        return false;
+        return true;
     }
 
     public List<LicenseRequest> getAllLicenses() {
